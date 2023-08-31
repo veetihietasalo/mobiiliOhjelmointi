@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, FlatList } from 'react-native';
 
 const App = () => {
   const [num1, setNum1] = useState('');
   const [num2, setNum2] = useState('');
   const [result, setResult] = useState(null);
+  const [history, setHistory] = useState([]);
 
   const handleAddition = () => {
-    const sum = parseFloat(num1) + parseFloat(num2);
-    setResult(sum);
+    const calculatedResult = parseFloat(num1) + parseFloat(num2);
+    const operation = `${num1} + ${num2} = ${calculatedResult}`;
+    setResult(calculatedResult);
+    setHistory([...history, operation]);
   };
 
   const handleSubtraction = () => {
-    const difference = parseFloat(num1) - parseFloat(num2);
-    setResult(difference);
+    const calculatedResult = parseFloat(num1) - parseFloat(num2);
+    const operation = `${num1} - ${num2} = ${calculatedResult}`;
+    setResult(calculatedResult);
+    setHistory([...history, operation]);
   };
 
   return (
@@ -37,7 +42,16 @@ const App = () => {
         <Button title="-" onPress={handleSubtraction} />
       </View>
       {result !== null && <Text style={styles.resultText}>Tulos: {result}</Text>}
+      <View style={styles.container}>
+        <FlatList
+          data={history}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => <Text style={styles.historyItem}>{item}</Text>}
+        />
+        </View>
+      
     </View>
+    
   );
 };
 
@@ -46,7 +60,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20
+    padding: 70
   },
   input: {
     height: 30, // Pienennetty korkeus 40:stä 30:een
@@ -64,6 +78,12 @@ const styles = StyleSheet.create({
   resultText: {
     fontSize: 20,
     textAlign: 'center'
+  },
+  historyItem: {
+    padding: 10,
+    fontSize: 11,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd"
   }
 });
 
